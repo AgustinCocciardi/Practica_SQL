@@ -148,6 +148,7 @@ CREATE TABLE MATERIA(
 	nombre_materia varchar(30),
 	matricula_Alumno int FOREIGN KEY REFERENCES ALUMNO(matricula),
 	id_Carrera int FOREIGN KEY REFERENCES CARRERA(id),
+	nota int,
 	CONSTRAINT PK_MA PRIMARY KEY (codigo_materia,matricula_Alumno,id_Carrera)
 )
 
@@ -155,24 +156,24 @@ CREATE TABLE MATERIA(
 SELECT * FROM MATERIA
 
 --inserto materias aprobadas para alumnos
-INSERT INTO MATERIA VALUES (1023,'Analisis Matematico 1',1000,1)
-INSERT INTO MATERIA VALUES (1024,'Elementos de Programacion',1000,1)
-INSERT INTO MATERIA VALUES (1025,'Sistemas de representacion',1000,1)
-INSERT INTO MATERIA VALUES (1026,'Tecno Ingen y Sociedad',1000,1)
-INSERT INTO MATERIA VALUES (1027,'Algebra y Geometria 1',1000,1)
-INSERT INTO MATERIA VALUES (1028,'Matematica Discreta',1000,1)
-INSERT INTO MATERIA VALUES (1029,'Quimica General',1000,1)
-INSERT INTO MATERIA VALUES (1030,'Fundamentos de TICs',1000,1)
-INSERT INTO MATERIA VALUES (1028,'Matematica Discreta',5000,1)
-INSERT INTO MATERIA VALUES (1029,'Quimica General',5000,1)
-INSERT INTO MATERIA VALUES (1024,'Elementos de Programacion',5000,1)
-INSERT INTO MATERIA VALUES (1025,'Sistemas de representacion',5000,1)
-INSERT INTO MATERIA VALUES (1026,'Tecno Ingen y Sociedad',5000,1)
+INSERT INTO MATERIA VALUES (1023,'Analisis Matematico 1',1000,1,7)
+INSERT INTO MATERIA VALUES (1024,'Elementos de Programacion',1000,1,9)
+INSERT INTO MATERIA VALUES (1025,'Sistemas de representacion',1000,1,8)
+INSERT INTO MATERIA VALUES (1026,'Tecno Ingen y Sociedad',1000,1,10)
+INSERT INTO MATERIA VALUES (1027,'Algebra y Geometria 1',1000,1,8)
+INSERT INTO MATERIA VALUES (1028,'Matematica Discreta',1000,1,7)
+INSERT INTO MATERIA VALUES (1029,'Quimica General',1000,1,8)
+INSERT INTO MATERIA VALUES (1030,'Fundamentos de TICs',1000,1,9)
+INSERT INTO MATERIA VALUES (1028,'Matematica Discreta',5000,1,8)
+INSERT INTO MATERIA VALUES (1029,'Quimica General',5000,1,9)
+INSERT INTO MATERIA VALUES (1024,'Elementos de Programacion',5000,1,10)
+INSERT INTO MATERIA VALUES (1025,'Sistemas de representacion',5000,1,10)
+INSERT INTO MATERIA VALUES (1026,'Tecno Ingen y Sociedad',5000,1,10)
 
---stored procedure para ver el nombre del alumno, la carrera que cursa y las materias aprobadas
+--stored procedure para ver el nombre del alumno, la carrera que cursa y las materias aprobadas con sus notas
 CREATE PROC materias_alumno (@matriculaAlumn int) AS
 BEGIN
-	SELECT ALUMNO.nombre, CARRERA.nombre, MATERIA.nombre_materia
+	SELECT ALUMNO.nombre, CARRERA.nombre, MATERIA.nombre_materia, MATERIA.nota
 	FROM MATERIA JOIN ALUMNO ON matricula = matricula_Alumno JOIN CARRERA ON id = id_Carrera
 	WHERE matricula_Alumno = @matriculaAlumn
 END
@@ -181,7 +182,7 @@ END
 EXEC materias_alumno 1000
 EXEC materias_alumno 5000
 
---funcion para conocer la cantidad de materias aprobadas de un alumno
+--funcion para conocer la cantidad de materias aprobadas de un alumno. recibe el numero de matricula
 CREATE FUNCTION cant_materias_aprobadas_alumno (@matriculaAlumno int)
 RETURNS INT AS
 BEGIN
