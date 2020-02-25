@@ -67,11 +67,11 @@ BEGIN
 END
 
 --ejecucion de la funcion
-SELECT dbo.cuenta_alumnos('ingenieria')
-SELECT dbo.cuenta_alumnos('economia')
-SELECT dbo.cuenta_alumnos('medicina')
-SELECT dbo.cuenta_alumnos('abogacia')
-SELECT dbo.cuenta_alumnos('pendiente')
+SELECT dbo.cuenta_alumnos('ingenieria') AS CANTIDAD_ALUMNOS
+SELECT dbo.cuenta_alumnos('economia') AS CANTIDAD_ALUMNOS
+SELECT dbo.cuenta_alumnos('medicina') AS CANTIDAD_ALUMNOS
+SELECT dbo.cuenta_alumnos('abogacia') AS CANTIDAD_ALUMNOS
+SELECT dbo.cuenta_alumnos('pendiente') AS CANTIDAD_ALUMNOS
 
 --stored procedure que devuelve el nombre del alumno y la carrera que cursa ese alumno. recibe la matricula
 CREATE PROC nombre_alumno_cursando_carrera (@matriculaAlum int) AS
@@ -196,5 +196,69 @@ BEGIN
 END
 
 --ejecucion de la funcion
-SELECT dbo.cant_materias_aprobadas_alumno(1000)
-SELECT dbo.cant_materias_aprobadas_alumno(5000)
+SELECT dbo.cant_materias_aprobadas_alumno(1000) as CANTIDAD
+SELECT dbo.cant_materias_aprobadas_alumno(5000) as CANTIDAD
+
+--funcion para conocer las materias aprobadas por un alumno, recibe la matricula del alumno
+CREATE FUNCTION materias_aprobadas (@matriculaAlumno int)
+RETURNS @materias TABLE (
+	codigo int,
+	nombre varchar(30),
+	nota int) AS
+BEGIN
+	INSERT @materias
+	SELECT codigo_materia, nombre_materia, nota
+	FROM MATERIA
+	WHERE matricula_Alumno=@matriculaAlumno
+	
+	RETURN
+END
+
+-- ejecucion de la funcion
+SELECT * 
+FROM materias_aprobadas(1000)
+
+SELECT * 
+FROM materias_aprobadas(5000)
+
+--creo una tabla llamada profesor
+CREATE TABLE PROFESOR (
+	legajo int,
+	nombre varchar(30),
+	CONSTRAINT PK_PROF PRIMARY KEY (legajo)
+)
+
+--creo una funcion para contar la cantidad de profesores
+CREATE FUNCTION cuenta_profesores (@legajo int)
+RETURNS INT 
+AS 
+BEGIN 
+	declare @cantidad int
+	SET @cantidad= (SELECT COUNT(legajo) as CANT
+					FROM PROFESOR)
+	RETURN @cantidad
+END
+
+--ejecucion de la funcion
+SELECT dbo.cuenta_profesores(1) as CANTIDAD_PROFESORES
+
+--creo un stored procedure para insertar valores en profesores, pasando solo el nombre
+CREATE PROC insertar_profesor (@nombre varchar(30)) AS
+BEGIN
+	declare @cantidad int
+	SET @cantidad = (SELECT dbo.cuenta_profesores(0)) + 1
+	INSERT INTO PROFESOR VALUES (@cantidad,@nombre)
+END
+
+--ejecucion del procedure 
+EXEC insertar_profesor 'Fernandez Martin'
+EXEC insertar_profesor 'Laprida Maria'
+
+--otro procedure para que me devuelva los profesores
+CREATE PROC dame_profesores AS
+BEGIN
+	SELECT * FROM PROFESOR
+END
+
+--ejecucion del procedure
+EXEC dame_profesores
