@@ -169,6 +169,20 @@ INSERT INTO MATERIA VALUES (1029,'Quimica General',5000,1,9)
 INSERT INTO MATERIA VALUES (1024,'Elementos de Programacion',5000,1,10)
 INSERT INTO MATERIA VALUES (1025,'Sistemas de representacion',5000,1,10)
 INSERT INTO MATERIA VALUES (1026,'Tecno Ingen y Sociedad',5000,1,10)
+INSERT INTO MATERIA VALUES (1031,'Fisica 1',1000,1,5)
+INSERT INTO MATERIA VALUES (1032,'Algebra y Geometria 2',1000,1,10)
+INSERT INTO MATERIA VALUES (1033,'Analisis Matematico 2',1000,1,10)
+INSERT INTO MATERIA VALUES (1035,'Fisica 2',1000,1,4)
+INSERT INTO MATERIA VALUES (1108,'Requerm Ingenieria',1000,1,7)
+INSERT INTO MATERIA VALUES (1109,'Arquitec Computacion',1000,1,5)
+INSERT INTO MATERIA VALUES (1110,'Programacion',1000,1,4)
+INSERT INTO MATERIA VALUES (1111,'Prob y Estadistica',1000,1,7)
+INSERT INTO MATERIA VALUES (1112,'Auditoria y Seguridad',1000,1,8)
+INSERT INTO MATERIA VALUES (1113,'Base de Datos',1000,1,4)
+INSERT INTO MATERIA VALUES (1114,'Sistemas Operativos',1000,1,4)
+INSERT INTO MATERIA VALUES (1115,'Analisis de Sistemas',1000,1,8)
+INSERT INTO MATERIA VALUES (1116,'Programacion Avanz',1000,1,8)
+INSERT INTO MATERIA VALUES (1117,'Calculo Numerico',1000,1,8)
 
 --stored procedure para ver el nombre del alumno, la carrera que cursa y las materias aprobadas con sus notas
 CREATE PROC materias_alumno (@matriculaAlumn int) AS
@@ -262,3 +276,22 @@ END
 
 --ejecucion del procedure
 EXEC dame_profesores
+
+--funcion para obtener el promedio
+CREATE FUNCTION promedio_alumno (@matricula int) 
+RETURNS FLOAT AS
+BEGIN
+	DECLARE @promedio FLOAT
+
+	SET @promedio = (
+						SELECT AVG(nota)
+						FROM MATERIA
+						WHERE MATERIA.matricula_Alumno = @matricula
+					)
+
+	RETURN @promedio
+END
+
+--ejecucion de la funcion
+SELECT dbo.promedio_alumno(1000) as PROMEDIO
+SELECT dbo.promedio_alumno(5000) as PROMEDIO
