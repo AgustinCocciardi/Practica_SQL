@@ -295,3 +295,43 @@ END
 --ejecucion de la funcion
 SELECT dbo.promedio_alumno(1000) as PROMEDIO
 SELECT dbo.promedio_alumno(5000) as PROMEDIO
+
+--crear procedure para ver las materias con nota mas baja de un alumno
+CREATE PROC nota_minor (@matricula int) AS
+BEGIN
+	declare @nota_low int
+
+	SET @nota_low = (
+							SELECT MIN(nota)
+							FROM MATERIA
+							WHERE MATERIA.matricula_Alumno = @matricula
+							)
+	
+	SELECT *
+	FROM MATERIA 
+	WHERE MATERIA.nota = @nota_low AND MATERIA.matricula_Alumno = @matricula
+END
+
+--ejecucion del procedure
+EXEC nota_minor 1000
+EXEC nota_minor 5000
+
+--crear procedure para ver las materias con nota mas alta de un alumno
+CREATE PROC nota_major (@matricula int) AS
+BEGIN
+	declare @nota_low int
+
+	SET @nota_low = (
+							SELECT MAX(nota)
+							FROM MATERIA
+							WHERE MATERIA.matricula_Alumno = @matricula
+							)
+	
+	SELECT *
+	FROM MATERIA 
+	WHERE MATERIA.nota = @nota_low AND MATERIA.matricula_Alumno = @matricula
+END
+
+--ejecucion del procedure
+EXEC nota_major 1000
+EXEC nota_major 5000
